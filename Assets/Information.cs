@@ -51,19 +51,19 @@ public class WorkerInfoUI : MonoBehaviour
         currentWorkerID = aiWorkerID;
 
         // UI 업데이트
-        workerID.text = $"ID: {aiWorkerID}";
-        workerName.text = $"이름: {dbData["이름"]}";
-        workerTeam.text = $"부서: {dbData["부서"]}";
-        workerRank.text = $"직급: {dbData["직급"]}";
-        workTimeText.text = $"근로시간: {dbData["근무시간"]}";
+        workerID.text = $"{aiWorkerID}";
+        workerName.text = $"{dbData["이름"]}";
+        workerTeam.text = $"{dbData["부서"]}";
+        workerRank.text = $"{dbData["직급"]}";
+        workTimeText.text = $"{dbData["근무시간"]}";
 
         float x = aiData["position_x"]?.ToObject<float>() ?? 0f;
         float y = aiData["position_y"]?.ToObject<float>() ?? 0f;
-        positionText.text = $"현재 위치: ({x:F1}, {y:F1})";
+        positionText.text = $"({x:F1}, {y:F1})";
 
         // 전경 카메라 켜기, 기본 카메라 끄기
-        if (overviewCamera != null) overviewCamera.gameObject.SetActive(true);
-        if (workerCamera != null) workerCamera.gameObject.SetActive(false);
+        if (overviewCamera != null) overviewCamera.gameObject.SetActive(false);
+        if (workerCamera != null) workerCamera.gameObject.SetActive(true);
     }
 
    // X 버튼 누르면 닫기 요청
