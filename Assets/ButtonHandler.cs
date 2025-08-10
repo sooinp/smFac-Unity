@@ -63,9 +63,10 @@ public class ButtonHandler : MonoBehaviour
 
         alertButton.onClick.AddListener(() => OnAlertButtonClicked());
         listButton.onClick.AddListener(() => OnListButtonClicked());
-        gotoFirst.onClick.AddListener(() => OnGotoFirstClicked());
-        dashboard.onClick.AddListener(() => OnDashboardClicked());
-        exit.onClick.AddListener(() => OnExitClicked());
+        //gotoFirst.onClick.AddListener(() => OnGotoFirstClicked());
+        //dashboard.onClick.AddListener(() => OnDashboardClicked());
+        //exit.onClick.AddListener(() => OnExitClicked());
+
         //popupConfirmButton.onClick.AddListener(() => popupWindow.SetActive(false));
     }
 
@@ -127,7 +128,7 @@ public class ButtonHandler : MonoBehaviour
     {
 #if UNITY_WEBGL == true && !UNITY_EDITOR
         // WebGL 빌드 환경에서만 JavaScript 함수를 호출합니다.
-        Application.ExternalCall("handleUnityLogout");
+        //Application.ExternalCall("handleUnityLogout");
 #else
         // 에디터 환경에서는 로그만 출력하여 테스트합니다.
         Debug.Log("에디터 모드: 로그아웃 신호를 보냈습니다.");
