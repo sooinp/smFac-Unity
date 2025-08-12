@@ -24,11 +24,11 @@ public class WorkerController : MonoBehaviour
 		// 임시 데이터. 삭제해야 함.
 		// 여기에서 JSON 문자열로 데이터를 직접 작성하거나 전달받은 값을 쓰세요
 		//string aiJsonString = @"{
-  //          'cameraID': 'CAM_01',
-  //          'workerID': 'W123',
-  //          'position_x': 10.5,
-  //          'position_y': 8.3
-  //      }";
+		//          'cameraID': 'CAM_01',
+		//          'workerID': 'W123',
+		//          'position_x': 10.5,
+		//          'position_y': 8.3
+		//      }";
 
 		string dbJsonString = @"{
             'workerID': 'W123',
@@ -48,9 +48,10 @@ public class WorkerController : MonoBehaviour
 
 		// JSON 문자열로 worker의 정보 설정 (임시, 후에 서버에서 받아온 JSON 문자열을 넣게 교체해야함.)
 		workerInfo.SetInfoFromJSONString(dbJsonString);
+        //StartCoroutine(GetWorkerDataFromServer());
 
-		// 하위 object 중에 workerCamera를 찾음.
-		workerCamera = transform.Find("workerCamera")?.gameObject;
+        // 하위 object 중에 workerCamera를 찾음.
+        workerCamera = transform.Find("workerCamera")?.gameObject;
 	}
 
 	// worker camera를 활성화 / 비활성화
