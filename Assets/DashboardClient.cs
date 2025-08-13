@@ -3,6 +3,7 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using TMPro;
 
 
 #region DTOs (서버 JSON 키와 정확히 일치해야 함)
@@ -66,11 +67,11 @@ public class DashboardClient : MonoBehaviour
     [Header("Polling (sec). 0 = one-shot")]
     [SerializeField] private float pollIntervalSec = 0f;
 
-    private bool running;
+    //private bool running;
 
-    private void OnEnable() { running = true; StartCoroutine(PollLoop()); }
-    private void OnDisable() { running = false; }
-    private void OnDestroy() { running = false; }
+    //private void OnEnable() { running = true; StartCoroutine(PollLoop()); }
+    //private void OnDisable() { running = false; }
+    //private void OnDestroy() { running = false; }
 
     // 다른 스크립트가 구독할 콜백
     public Action<SummaryV1> OnSummary;
@@ -78,22 +79,27 @@ public class DashboardClient : MonoBehaviour
     public Action<WorkerStatusRoot> OnWorkerStatus;
     public Action<RecentAlertsRoot> OnRecentAlerts;
 
-    private IEnumerator PollLoop()
-    {
-        do
-        {
-            // 필요에 따라 일부만 호출해도 됨
-            yield return FetchOngoingTasks();
-            yield return FetchPartSummary();
-            yield return FetchWorkerStatus();
-            yield return FetchRecentAlerts(72);
-            yield return FetchRiskSummary();
-            yield return FetchZoneSummary();
+    public TextMeshProUGUI workingContent;
+    public TextMeshProUGUI partWorkingContent;
+    public TextMeshProUGUI workerRiskAlertContent;
+    public TextMeshProUGUI yesterdayRiskContent;
 
-            if (pollIntervalSec <= 0f) break;
-            yield return new WaitForSeconds(pollIntervalSec);
-        } while (running);
-    }
+    //private IEnumerator PollLoop()
+    //{
+    //    do
+    //    {
+    //        // 필요에 따라 일부만 호출해도 됨
+    //        yield return FetchOngoingTasks();
+    //        yield return FetchPartSummary();
+    //        yield return FetchWorkerStatus();
+    //        yield return FetchRecentAlerts(72);
+    //        yield return FetchRiskSummary();
+    //        yield return FetchZoneSummary();
+
+    //        if (pollIntervalSec <= 0f) break;
+    //        yield return new WaitForSeconds(pollIntervalSec);
+    //    } while (running);
+    //}
 
     // ─────────────────────────────────────────────────────────────
     // 공통 GET
@@ -158,14 +164,22 @@ public class DashboardClient : MonoBehaviour
     {
         yield return Get("/dashboard/worker-status", json =>
         {
+            string s = "";
+
             var data = JsonUtility.FromJson<WorkerStatusRoot>(json);
             if (data?.worker_status == null) { Debug.LogError("[worker] null"); return; }
 
             Debug.Log($"[worker] rows={data.worker_status.Length}");
             for (int i = 0; i < Mathf.Min(3, data.worker_status.Length); i++)
+            {
                 Debug.Log($"  · {data.worker_status[i].worker_id}: total={data.worker_status[i].total_tasks}");
+                s += $"  · {data.worker_status[i].worker_id}: total={data.worker_status[i].total_tasks}\n";
+            }
             // TODO: UI 바인딩
             OnWorkerStatus?.Invoke(data);
+
+
+            workingContent.SetText(s);
         });
     }
 
