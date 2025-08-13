@@ -121,7 +121,7 @@ public class DashboardClient : MonoBehaviour
         }
     }
 
-    // 1) ongoing-tasks
+    // 1) ongoing-tasks <업무 현황표>
     public IEnumerator FetchOngoingTasks()
     {
         yield return Get("/dashboard/ongoing-tasks", json =>
@@ -143,7 +143,7 @@ public class DashboardClient : MonoBehaviour
         });
     }
 
-    // 2) part-summary
+    // 2) part-summary <파트별 현황>
     public IEnumerator FetchPartSummary()
     {
         yield return Get("/dashboard/part-summary", json =>
@@ -159,7 +159,7 @@ public class DashboardClient : MonoBehaviour
         });
     }
 
-    // 3) worker-status
+    // 3) worker-status <작업자별 현황표>
     public IEnumerator FetchWorkerStatus()
     {
         yield return Get("/dashboard/worker-status", json =>
@@ -176,18 +176,20 @@ public class DashboardClient : MonoBehaviour
                 s += $"  · {data.worker_status[i].worker_id}: total={data.worker_status[i].total_tasks}\n";
             }
             // TODO: UI 바인딩
-            OnWorkerStatus?.Invoke(data);
+            //OnWorkerStatus?.Invoke(data);
 
 
             workingContent.SetText(s);
         });
     }
 
-    // 4) recent-alerts
+    // 4) recent-alerts <최근 알람 내역>
     public IEnumerator FetchRecentAlerts(int hours)
     {
         yield return Get($"/dashboard/recent-alerts?hours={hours}", json =>
         {
+            string s = "";
+
             var data = JsonUtility.FromJson<RecentAlertsRoot>(json);
             if (data?.recent_alerts == null) { Debug.LogError("[alerts] null"); return; }
 
@@ -196,13 +198,15 @@ public class DashboardClient : MonoBehaviour
             {
                 var r = data.recent_alerts[i];
                 Debug.Log($"  · {r.worker_id} | {r.type} x{r.count}");
+                s += $"  · {r.worker_id} | {r.type} x{r.count}\n";
             }
             // TODO: UI 바인딩
-            OnRecentAlerts?.Invoke(data);
+            //OnRecentAlerts?.Invoke(data);
+            workingContent.SetText(s);
         });
     }
 
-    // 5) risk-summary
+    // 5) risk-summary <작업자 경고 상태>
     public IEnumerator FetchRiskSummary()
     {
         yield return Get("/dashboard/risk-summary", json =>
@@ -216,7 +220,7 @@ public class DashboardClient : MonoBehaviour
         });
     }
 
-    // 6) zone-summary
+    // 6) zone-summary <구역별 현황>
     public IEnumerator FetchZoneSummary()
     {
         yield return Get("/dashboard/zone-summary", json =>
